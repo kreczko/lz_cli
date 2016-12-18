@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+import os
+import sys
+import warnings
+
+warnings.filterwarnings("ignore")
+
+current_path = os.path.split(__file__)[0]
+# optional
+path_to_projects_python = os.path.join(current_path, '..')
+sys.path.append(path_to_projects_python)
+
+import hepshell
+
+if len(sys.argv) == 1:
+    if not sys.stdout.isatty():
+        rc = hepshell.run_command(['help'])
+        sys.exit(rc)
+    else:
+        os.environ['TERM'] = 'vt100'
+        name_of_this_script = os.path.basename(sys.argv[0])
+        hepshell.run_cli('{0} > '.format(name_of_this_script))
+else:
+    args = sys.argv[1:]
+    rc = hepshell.run_command(args)
+    sys.exit(rc)
