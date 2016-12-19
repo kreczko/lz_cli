@@ -1,0 +1,70 @@
+# G4 macro to run with LUXSim on Grid for detector component background
+
+# Set Verbose output
+/run/verbose       1
+/control/verbose   0
+/tracking/verbose  0
+/grdm/verbose      0
+
+# Set LUXSim initialisation
+/run/initialize
+
+# Set Directory output for .bin files.
+# Passed in from calling script as environment variable
+/LUXSim/io/outputDir /scratch/phxlk/lz
+/LUXSim/io/updateFrequency 1
+
+
+# Set LZ Detector geometry
+/LUXSim/detector/select LZDetector
+/LUXSim/detector/gridWires off
+/LUXSim/detector/update
+
+
+/LUXSim/materials/LXeTeflonRefl 0.95
+/LUXSim/materials/LXeAbsorption 70 m
+/LUXSim/materials/LXeSteelRefl 0.05
+/LUXSim/materials/GXeTeflonRefl 0.85
+/LUXSim/materials/GXeSteelRefl 0.20
+/LUXSim/materials/GXeAbsorption 3 m
+/LUXSim/materials/AlUnoxidizedQuartzRefl 1.0
+#/LUXSim/materials/GXeRayleigh 500 km
+#/LUXSim/materials/LXeRayleigh 36 cm
+
+
+# Set Physics: Energy deposit only
+/LUXSim/physicsList/useOpticalProcesses false
+
+# Set Sensitive Volumes record level.
+# Record Level 2: energy deposits and multiple scatters.
+
+/LUXSim/detector/recordLevel LiquidXenonTarget   2
+/LUXSim/detector/recordLevel ReverseFieldRegion  2
+
+/LUXSim/detector/recordLevel LiquidSkinXenon     2
+/LUXSim/detector/recordLevel BottomSkinBank      2
+/LUXSim/detector/recordLevel TopSkinBank         2
+/LUXSim/detector/recordLevel LiquidSkinXenonBank 2
+/LUXSim/detector/recordLevel InnerGaseousXenon   2
+
+/LUXSim/detector/recordLevel ScintillatorCenter  2
+/LUXSim/detector/recordLevel WaterAndPMTs  2
+
+# Set Source Volumes record level.
+
+# Record Level 3: all possible spatial and temporal information.
+
+#/LUXSim/detector/recordLevel OuterTitaniumVessel 0
+
+#  Set Generator for Ba133
+#/LUXSim/source/set SingleParticle_gamma 0 854.456 0 1 Bq 356.0 keV
+/LUXSim/source/set AmLi 0 882.0 100 1 Bq
+/LUXSim/source/set AmLi 763.83 -441.0 100 1 Bq
+/LUXSim/source/set AmLi -763.83 -441.0 100 1 Bq
+
+# Output .bin files
+/LUXSim/io/outputName SourceTube_all_AmLi_100_
+
+/LUXSim/beamOn 10
+
+exit

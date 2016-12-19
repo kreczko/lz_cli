@@ -113,3 +113,5 @@ LZ_LUXSIM_PATH=/cvmfs/lz.opensciencegrid.org/LUXSim/release-4.4.6;export LZ_LUXS
 source ${LZ_GEANT_PATH}/bin/geant4.sh
 source ${LZ_ROOT_PATH}/bin/thisroot.sh
 export LD_LIBRARY_PATH=${LZ_CLHEP_PATH}/lib:${LD_LIBRARY_PATH}
+
+lz setup
