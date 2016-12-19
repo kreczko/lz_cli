@@ -29,7 +29,7 @@ class Command(hepshell.Command):
 
     def run(self, args, variables):
         self.__prepare(args, variables)
-        _create_directories([WORKSPACE, RESULT_DIR, LOG_DIR])
+        _create_directories([WORKSPACE, RESULT_DIR, LOG_DIR, TMP_DIR])
         self.__text = "LZ CLI is now ready to use"
 
         return True

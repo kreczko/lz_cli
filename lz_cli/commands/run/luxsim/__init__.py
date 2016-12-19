@@ -6,10 +6,15 @@
         run luxsim <config file>
 
 '''
-import hepshell
 import os
-from lz_cli.setup import LZ_LUXSIM_PATH
+import shutil
 import logging
+import glob
+from operator import itemgetter
+
+import hepshell
+from lz_cli.setup import LZ_LUXSIM_PATH, RESULT_DIR, TMP_DIR
+
 LOG = logging.getLogger(__name__)
 
 LUX_SIM_EXE = 'LUXSimExecutable'
@@ -21,19 +26,15 @@ class Command(hepshell.Command):
 
     def __init__(self, path=__file__, doc=__doc__):
         super(Command, self).__init__(path, doc)
+        self.__output_file = None
+        self.__output_dir = RESULT_DIR
 
     def run(self, args, variables):
-        '''
-            cd /cvmfs/lz.opensciencegrid.org/LUXSim/release-4.4.6/
-            ./LUXSimExecutable /scratch/phxlk/lz/test.mac
-            tools/LUXRootConverter /scratch/phxlk/lz/SourceTube_all_AmLi_100_791235223.bin
-            tools/LUXMCTruth /scratch/phxlk/lz/SourceTube_all_AmLi_100_791235223.root
-        '''
         input_file = os.path.abspath(args[0])
-
-        output_folder = os.path.dirname(input_file)
-        output_file = self._get_outputfile(input_file)
         LOG.info('Using simulation config: {0}'.format(input_file))
+        self._replace_output_dir(input_file)
+        LOG.info('Snapshot at: {0}'.format(self.__input_file))
+
         commands = [
             'cd {LZ_LUXSIM_PATH}',
             './{LUX_SIM_EXE} {input_file}'
@@ -46,15 +47,44 @@ class Command(hepshell.Command):
             input_file=input_file,
         )
         from hepshell.interpreter import call
-        call(all_commands, LOG, shell=True)
+        code, _, _ = call(all_commands, LOG, shell=True)
+        if code == 0:
+            # now find the actual output file (has a random number in the end)
+            output_file_prefix = self._get_parameter_from_input_file(
+                '/LUXSim/io/outputName', self.__input_file
+            )
+            self.__output_file = self._find_output_file(output_file_prefix)
+            self.__text = 'Produced file {0}'.format(self.__output_file)
+            return True
+        else:
+            return False
 
-    def _get_outputfile(self, input_file):
-        '''
-            Search for /LUXSim/io/outputName in input_file
-        '''
-        output_file = ''
+    def _get_parameter_from_input_file(self, parameter, input_file):
+        result = None
         with open(input_file) as f:
             for line in f.readlines():
-                if '/LUXSim/io/outputName' in line:
-                    output_file = line.split(' ')[1]
-        return output_file
+                if parameter in line:
+                    result = line.split(' ')[1].strip('\n')
+        return result
+
+    def _replace_output_dir(self, input_file):
+        output_dir = self._get_parameter_from_input_file(
+            '/LUXSim/io/outputDir', input_file
+        )
+        self.__input_file = os.path.join(TMP_DIR, os.path.basename(input_file))
+        content = ""
+        with open(input_file) as f:
+            content = f.read()
+        with open(self.__input_file, 'w') as f:
+            f.write(content.replace(output_dir, RESULT_DIR))
+
+    def _find_output_file(self, output_file_prefix):
+        path = os.path.join(self.__output_dir, output_file_prefix)
+        path += '*.bin'
+        files = glob.glob(path)
+        if len(files) == 1:
+            return files[0]
+
+        stats = [(f, os.path.getmtime(f)) for f in files]
+        sorted_stats = tuple(sorted(stats, key=itemgetter(1), reverse=True))
+        return sorted_stats[0][0]
