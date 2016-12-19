@@ -1,7 +1,6 @@
 import os
 import logging
 
-LZ_LUXSIM_PATH = os.environ['LZ_LUXSIM_PATH']
 LZ_ROOT = os.environ['HEP_PROJECT_ROOT']
 
 LOG = logging.getLogger(__name__)

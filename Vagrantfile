@@ -57,7 +57,7 @@ Vagrant.configure(2) do |config|
     vb.gui = false
   #
   #   # Customize the amount of memory on the VM:
-    vb.memory = "2048"
+    vb.memory = "3072"
     vb.cpus = 2
   end
   #
@@ -79,4 +79,3 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
 end
-

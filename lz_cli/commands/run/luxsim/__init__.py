@@ -8,7 +8,7 @@
 '''
 import hepshell
 import os
-from lz_cli import LZ_LUXSIM_PATH
+from lz_cli.setup import LZ_LUXSIM_PATH
 import logging
 LOG = logging.getLogger(__name__)
 
@@ -34,7 +34,6 @@ class Command(hepshell.Command):
         output_folder = os.path.dirname(input_file)
         output_file = self._get_outputfile(input_file)
         LOG.info('Using simulation config: {0}'.format(input_file))
-        self.__text = 'Using simulation config: {0}'.format(input_file)
         commands = [
             'cd {LZ_LUXSIM_PATH}',
             './{LUX_SIM_EXE} {input_file}'

@@ -11,7 +11,7 @@
 
 # Set Directory output for .bin files.
 # Passed in from calling script as environment variable
-/LUXSim/io/outputDir /scratch/phxlk/lz
+/LUXSim/io/outputDir /vagrant/workspace/results
 /LUXSim/io/updateFrequency 1
 
 
