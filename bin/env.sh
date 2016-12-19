@@ -85,18 +85,18 @@ if [ ! -d "${HEP_PROJECT_ROOT}/external/miniconda" ] ; then
 	rm -f miniconda.sh
 	conda update conda -y
 	conda update pip -y
-	conda create --name lz python=2.7 -y
+	conda create --name lz python=2.7 git wget -y
 	source activate lz
 	# python modules
-	pip install -U python-cjson nose psutil
+  # pycurl is a bit special
 	if [[ $PLATFORM == *"redhat"* ]]; then
 		PYCURL_SSL_LIBRARY=nss pip install --compile pycurl --global-option='--with-nss'
 	fi
 	if [[ $PLATFORM == *"debian"* ]]; then
 		PYCURL_SSL_LIBRARY=openssl pip install --compile pycurl --global-option='--with-openssl'
 	fi
-	pip install -r ${HEP_PROJECT_ROOT}/requirements.txt
-
+	pip install -U -r ${HEP_PROJECT_ROOT}/requirements.txt
+  # remove downloaded tarballs to free up some space
 	conda clean -t -y
 else
 	PATH=${HEP_PROJECT_ROOT}/external/miniconda/bin:$PATH; export PATH

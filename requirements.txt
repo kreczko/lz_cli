@@ -1,3 +1,6 @@
-hepshell
+git+https://github.com/kreczko/hepshell.git
 plumbum
 luigi
+python-cjson
+nose
+psutil
