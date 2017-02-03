@@ -78,30 +78,7 @@ fi
 
 PLATFORM=`python -mplatform`
 
-if [ ! -d "${HEP_PROJECT_ROOT}/external/miniconda" ] ; then
-	wget -nv http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
-	bash miniconda.sh -b -p ${HEP_PROJECT_ROOT}/external/miniconda
-	PATH=${HEP_PROJECT_ROOT}/external/miniconda/bin:$PATH; export PATH
-	rm -f miniconda.sh
-	conda update conda -y
-	conda update pip -y
-	conda create --name lz python=2.7 git wget -y
-	source activate lz
-	# python modules
-  # pycurl is a bit special
-	if [[ $PLATFORM == *"redhat"* ]]; then
-		PYCURL_SSL_LIBRARY=nss pip install --compile pycurl --global-option='--with-nss'
-	fi
-	if [[ $PLATFORM == *"debian"* ]]; then
-		PYCURL_SSL_LIBRARY=openssl pip install --compile pycurl --global-option='--with-openssl'
-	fi
-	pip install -U -r ${HEP_PROJECT_ROOT}/requirements.txt
-  # remove downloaded tarballs to free up some space
-	conda clean -t -y
-else
-	PATH=${HEP_PROJECT_ROOT}/external/miniconda/bin:$PATH; export PATH
-	source activate lz
-fi
+source ${HEP_PROJECT_ROOT}/recipes/conda_env.sh
 
 # now the LZ software
 LZ_GEANT_PATH=/cvmfs/lz.opensciencegrid.org/geant4/geant4.9.5.p02; export LZ_GEANT_PATH
