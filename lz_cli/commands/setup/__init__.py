@@ -11,7 +11,7 @@
 import logging
 import hepshell
 import os
-from lz_cli.setup import WORKSPACE, RESULT_DIR, LOG_DIR
+from lz_cli.setup import WORKSPACE, RESULT_DIR, LOG_DIR, TMP_DIR
 
 LOG = logging.getLogger(__name__)
 
