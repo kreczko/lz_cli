@@ -31,6 +31,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # add your git config to the vagrant box
   #config.vm.provision "file", source: "~/.gitconfig", destination: "/home/vagrant/.gitconfig"
   # example of executing commands when provisioning the machine
+  config.vm.provision "file", source: "~/.gitconfig", destination: "/home/vagrant/.gitconfig"
+  config.vm.provision "file", source: "~/.ssh/id_rsa", destination: "/home/vagrant/.ssh/id_rsa"
+  config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/home/vagrant/.ssh/id_rsa.pub"
   config.vm.provision "shell", inline: <<-SHELL
         sudo mkdir /software
         sudo chown vagrant /software

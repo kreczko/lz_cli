@@ -1,7 +1,13 @@
 #!/bin/bash
-LZ_CONDA_PATH=/software/miniconda/LZ; export LZ_CONDA_PATH
+if [ ! -d "${PROJECT_ROOT}/external" ] ; then
+	mkdir ${PROJECT_ROOT}/external
+fi
+
+PLATFORM=`python -mplatform`
+
+LZ_CONDA_PATH=${PROJECT_ROOT}/external/miniconda/LZ; export LZ_CONDA_PATH
 # clean paths
-PATH=`python ${HEP_PROJECT_ROOT}/bin/remove_from_env.py "$PATH" "${LZ_CONDA_PATH}"`
+PATH=`python ${PROJECT_ROOT}/bin/remove_from_env.py "$PATH" "${LZ_CONDA_PATH}"`
 
 if [ ! -d "${LZ_CONDA_PATH}" ] ; then
   CONDA_URL=https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
@@ -14,6 +20,7 @@ if [ ! -d "${LZ_CONDA_PATH}" ] ; then
   rm -f miniconda.sh
   echo "Finished conda installation, updating packages"
   conda config --add channels conda-forge
+  conda config --add channels nlesc
   conda config --set show_channel_urls yes
   conda update conda -y
   conda update pip -y
@@ -23,9 +30,9 @@ if [ ! -d "${LZ_CONDA_PATH}" ] ; then
   conda create -n lz python=2.7 -y
   echo "Created conda environment, installing basic dependencies"
   source activate lz
-  conda install --file ${HEP_PROJECT_ROOT}/conda_packages.txt -y
+  conda install --file ${PROJECT_ROOT}/conda_packages.txt -y
   # install python packages
-  pip install -U -r ${HEP_PROJECT_ROOT}/requirements.txt
+  pip install -U -r ${PROJECT_ROOT}/requirements.txt
   # clean the cache (downloaded tarballs)
   conda clean -t -y
   # give the group write access

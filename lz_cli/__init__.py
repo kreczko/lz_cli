@@ -1,7 +1,7 @@
 import os
 import logging
 
-LZ_ROOT = os.environ['HEP_PROJECT_ROOT']
+LZ_ROOT = os.environ['PROJECT_ROOT']
 
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.DEBUG)

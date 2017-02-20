@@ -5,12 +5,14 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-current_path = os.path.split(__file__)[0]
-# optional
-path_to_projects_python = os.path.join(current_path, '..')
-sys.path.append(path_to_projects_python)
+PROJECT_ROOT = os.environ['PROJECT_ROOT']
+os.environ['HEP_PROJECT_ROOT'] = PROJECT_ROOT
 
 import hepshell
+hepshell.settings.COMMANDS = [
+    'hepshell.commands',
+    'lz_cli.commands',
+]
 
 if len(sys.argv) == 1:
     if not sys.stdout.isatty():

@@ -7,8 +7,11 @@ import sys
 
 ENV = sys.argv[1]
 REMOVE = sys.argv[2]
+if not REMOVE:
+    sys.exit()
 
 new_path = []
+# print('ENV', ENV)
 for path in ENV.split(':'):
     if path.startswith(REMOVE):
         continue

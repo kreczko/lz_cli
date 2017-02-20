@@ -4,3 +4,5 @@ luigi
 python-cjson
 nose
 psutil
+root-numpy
+rootpy
