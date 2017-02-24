@@ -32,11 +32,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #config.vm.provision "file", source: "~/.gitconfig", destination: "/home/vagrant/.gitconfig"
   # example of executing commands when provisioning the machine
   config.vm.provision "file", source: "~/.gitconfig", destination: "/home/vagrant/.gitconfig"
+  # for gitlab access
   config.vm.provision "file", source: "~/.ssh/id_rsa", destination: "/home/vagrant/.ssh/id_rsa"
   config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/home/vagrant/.ssh/id_rsa.pub"
   config.vm.provision "shell", inline: <<-SHELL
         sudo mkdir /software
         sudo chown vagrant /software
+        sudo yum install -y qt-devel
   SHELL
 
   config.vm.provider "virtualbox" do |vb|
