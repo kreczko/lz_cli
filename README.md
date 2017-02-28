@@ -33,3 +33,16 @@ lz run luxsim examples/luxsim.mac
 DEBUG=1 lz run luxsim examples/luxsim.mac
 # if you need additional output
 ```
+
+# Benchmark suite
+
+```
+git clone https://github.com/kreczko/lz_cli.git
+cd lz_cli
+vagrant up
+# wait
+vagrant ssh
+cd /vagrant
+source bin/env.sh
+make benchmark
+```

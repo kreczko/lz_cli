@@ -1,0 +1,22 @@
+#!/bin/bash
+[ $# -eq 0 ] && { echo "Usage: $0 <number of events to produce>"; exit 1; }
+
+# TODO: cleanup files
+# TODO: create binaries in different path?
+# TODO: add benchmark matrix
+#   - different number of events
+#   - different ROOT versions
+#   - different GEANT versions
+#   - different BACCARAT versions?
+
+source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.9.5.p02
+lz compile BACCARAT --clean
+lz benchmark BACCARAT --nevents=$1
+
+source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.10.02.b01
+lz compile BACCARAT  --clean
+lz benchmark BACCARAT --nevents=$1
+
+# restore
+source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.9.5.p02
+# TODO: Add summary
