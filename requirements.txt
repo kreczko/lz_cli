@@ -6,3 +6,4 @@ nose
 psutil
 root-numpy
 rootpy
+memory_profiler

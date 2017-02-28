@@ -44,3 +44,5 @@ source ${PROJECT_ROOT}/scripts/lz_software.sh
 # miniconda setup for modern python and additional python packages
 source ${PROJECT_ROOT}/scripts/conda_env.sh
 source ${PROJECT_ROOT}/scripts/git_projects.sh
+
+lz setup
