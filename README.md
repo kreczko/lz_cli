@@ -35,14 +35,5 @@ DEBUG=1 lz run luxsim examples/luxsim.mac
 ```
 
 # Benchmark suite
-
-```
-git clone https://github.com/kreczko/lz_cli.git
-cd lz_cli
-vagrant up
-# wait
-vagrant ssh
-cd /vagrant
-source bin/env.sh
-make benchmark
-```
+ 1. Setup lz_cli (either [Setup on Scientific Linux 6/7](#setup-on-scientific-linux-67) or [Setup on OS X/Ubuntu/Windows](#setup-on-os-xubuntuwindows))
+ 2. run `make benchmark`
