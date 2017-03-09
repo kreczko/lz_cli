@@ -99,3 +99,4 @@ external
 workspace
 DEV
 *.root
+.*sw[po]
