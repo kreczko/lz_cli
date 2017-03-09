@@ -12,15 +12,9 @@ import hepshell
 import pandas as pd
 from shutil import copyfile
 
-# TODO: Implement run() method
-# TODO: return True if successful
-# TODO: text that should be printed / logged should be added to the Command object's __text attribute
-# TODO: tidy up the docstring for this file
-
 class Command(hepshell.Command):
     DEFAULTS = dict(
             backup="bak",
-            #backup=None,
     )
 
     def __init__(self, path=__file__, doc=__doc__):
@@ -41,7 +35,6 @@ class Command(hepshell.Command):
 
         if "backup" in variables:
             backup=variables["backup"]
-            print(backup,type(backup))
             backup_name=summary_filename+"."+variables["backup"]
             copyfile(summary_filename,backup_name )
 
