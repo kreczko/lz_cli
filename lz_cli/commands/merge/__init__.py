@@ -3,18 +3,16 @@
         Add an input CSV file into a summary output file
 
     Usage:
-        merge [options] <input_file> <summary_file>
+        merge [options] <input_file>[ <input_file2>[...]] <summary_file>
 
     Options:
-        --backup[=ext] Save a backup version of the original summary file, with the provided extension 
+        --append       Instead of overwriting the summary file, append the input data to it
 """
 import hepshell
 import pandas as pd
-from shutil import copyfile
 
 class Command(hepshell.Command):
     DEFAULTS = dict(
-            backup="bak",
     )
 
     def __init__(self, path=__file__, doc=__doc__):
@@ -22,22 +20,24 @@ class Command(hepshell.Command):
         super(Command, self).__init__(path, doc)
 
     def run(self, args, variables):
-        if len(args)!=2:
-            self.__text="Error: merge command needs exactly 2 arguments"
+        self.__prepare(args,variables)
+        if len(self.__args)<2:
+            self.__text="Error: merge command needs at least 2 arguments"
             return False
 
-        input_filename=args[0]
-        summary_filename=args[1]
-        save_backup=False
+        input_filenames=args[:-1]
+        summary_filename=args[-1]
 
-        to_add=pd.read_csv(input_filename)
-        summary=pd.read_csv(summary_filename)
+        if self.__variables.get("append",False) is True:
+            input_filenames=[summary_filename]+input_filenames
 
-        if "backup" in variables:
-            backup=variables["backup"]
-            backup_name=summary_filename+"."+variables["backup"]
-            copyfile(summary_filename,backup_name )
+        summary=None
+        for input_file in input_filenames:
+            to_add=pd.read_csv(input_file)
+            if summary is None:
+                summary=to_add
+            else:
+                summary=summary.append(to_add,ignore_index=True)
 
-        summary=summary.append(to_add,ignore_index=True)
         summary.to_csv(summary_filename,index=False)
         return True
