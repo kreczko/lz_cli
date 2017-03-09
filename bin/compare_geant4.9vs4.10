@@ -9,14 +9,26 @@
 #   - different GEANT versions
 #   - different BACCARAT versions?
 
+# fixes for PDSF
+DOMAIN=`dnsdomainname`
+
+
 source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.9.5.p02
 lz compile BACCARAT --clean
 lz benchmark BACCARAT --nevents=$1
 
-source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.10.02.b01
+# requires Qt to be installed!
+if [ "$DOMAIN" == "nersc.gov" ]; then
+  module load Geant4/10.02.b01
+else
+  source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.10.02.b01
+fi
 lz compile BACCARAT  --clean
 lz benchmark BACCARAT --nevents=$1
-
+if [ "$DOMAIN" == "nersc.gov" ]; then
+  module unload Geant4/10.02.b01
+fi
+#lz merge ${PROJECT_ROOT}/workspace/results/benchmark/*.csv ${PROJECT_ROOT}/workspace/results/benchmark/summary.csv
 # restore
 source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.9.5.p02
 # TODO: Add summary

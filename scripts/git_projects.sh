@@ -6,12 +6,12 @@ if [ ! -d "${DEV_PATH}" ] ; then
 fi
 
 # need to use SSH agent in order to type the password for the ssh key
-if [ ! -n "${SSH_AGENT_PID}" ] ; then
+if [ "x${SSH_AGENT_PID}" == "x" ] ; then
   killall ssh-agent
   echo "Starting SSH agent"
   eval $(ssh-agent)
+  ssh-add -l | grep -q '/home/vagrant/.ssh/id_rsa' || ssh-add
 fi
-ssh-add -l | grep -q '/home/vagrant/.ssh/id_rsa' || ssh-add
 
 
 python ${PROJECT_ROOT}/scripts/git_projects.py

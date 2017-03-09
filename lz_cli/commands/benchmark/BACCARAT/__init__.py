@@ -27,6 +27,10 @@ logger = logging.getLogger(__name__)
 
 
 def get_geant_version():
+    '''
+        Extracting GEANT4 version from $G4LIB, e.g.
+        /cvmfs/lz.opensciencegrid.org/geant4/geant4.9.5.p02/lib64/Geant4-9.5.2
+    '''
     # geant4.10.02
     g4lib = os.environ.get('G4LIB')
     tmp = g4lib.split('/')[-1].split('-')[-1]
@@ -92,6 +96,10 @@ class Command(hepshell.Command):
         self.__text = "Work In Progress!\n"
         self.__variables['input_file'] = self._write_macro()
         self.__variables['nevents'] = int(self.__variables['nevents'])
+        output_folder = os.path.join(RESULT_DIR, 'benchmark')
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+        self.__variables['output_folder'] = output_folder
 
         r, b = self.work()
         if not r:
@@ -100,7 +108,7 @@ class Command(hepshell.Command):
         self.output_file = r.getOutputFile()
         self.add_meta_data(b)
 
-        print('OUptutfile:', self.output_file)
+        print('Ouptutfile:', self.output_file)
         benchmark_file = self.output_file.replace('.bin', '.csv')
         b.to_csv(benchmark_file)
         print('Duration: {0}, RSS: {1}'.format(b.duration, b.rss_usage))

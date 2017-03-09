@@ -3,11 +3,17 @@
         Runs the BACCARATExecutable wit the given macro
 
     Usage:
-        run BACCARAT --input_file <path to .mac file>
+        run BACCARAT --input_file <path to .mac file> [--output_folder]
+
+    Parameters:
+        input_file:
+            path to BACCARAT macro file
+        output_folder:
+            Optional output folder. Default = {RESULT_DIR}
 """
 import logging
 import hepshell
-from lz_cli.setup import BACCARAT_DIR
+from lz_cli.setup import BACCARAT_DIR, RESULT_DIR
 import os
 
 logger = logging.getLogger(__name__)
@@ -33,7 +39,7 @@ def parseOutputFile(stdout):
     return output_file
 
 
-def moveOutputfile(output_file):
+def moveOutputfile(output_file, destination=RESULT_DIR):
     '''
         Moves the BACCARAT output file to the result directory
     '''
@@ -49,8 +55,7 @@ def moveOutputfile(output_file):
             return False, None
         logger.warn('Found {0}'.format(output_file))
     import shutil
-    from lz_cli.setup import RESULT_DIR
-    new_file = output_file.replace(BACCARAT_DIR, RESULT_DIR)
+    new_file = output_file.replace(BACCARAT_DIR, destination)
     if output_file != new_file:
         shutil.move(output_file, new_file)
     return True, new_file
@@ -87,9 +92,13 @@ def runBACCARATwithPb(input_file):
 
 
 class Command(hepshell.Command):
-    DEFAULTS = {'input_file': ''}
+    DEFAULTS = {
+        'input_file': '',
+        'output_folder': RESULT_DIR,
+    }
 
     def __init__(self, path=__file__, doc=__doc__):
+        doc = doc.format(RESULT_DIR=RESULT_DIR)
         super(Command, self).__init__(path, doc)
         self._output_file = None
 
@@ -102,7 +111,7 @@ class Command(hepshell.Command):
             self.__text += 'File {0} does not exist'.format(input_file)
             return False
         input_file = os.path.abspath(input_file)
-        logger.debug('using input file:', input_file)
+        logger.debug('using input file: %s', input_file)
 
         # code, stdout = runBACCARATwithPb(input_file)
         code, stdout, _ = runBACCARAT(input_file)
@@ -111,7 +120,8 @@ class Command(hepshell.Command):
             return False
 
         output_file = parseOutputFile(stdout)
-        r, output_file = moveOutputfile(output_file)
+        output_folder = self.__variables['output_folder']
+        r, output_file = moveOutputfile(output_file, output_folder)
         if r:
             self._output_file = output_file
 
