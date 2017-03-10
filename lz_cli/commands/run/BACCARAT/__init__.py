@@ -56,7 +56,11 @@ def moveOutputfile(output_file, destination=RESULT_DIR):
         logger.warn('Found {0}'.format(output_file))
     import shutil
     new_file = output_file.replace(BACCARAT_DIR, destination)
+    if new_file.endswith('.tmp'):
+        new_file = new_file.replace('.tmp', '')
     if output_file != new_file:
+        logger.debug('Moving output file {0} to {1}'.format(
+            output_file, new_file))
         shutil.move(output_file, new_file)
     return True, new_file
 

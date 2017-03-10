@@ -7,7 +7,7 @@ fi
 
 # need to use SSH agent in order to type the password for the ssh key
 if [ "x${SSH_AGENT_PID}" == "x" ] ; then
-  killall ssh-agent
+  killall -u `whoami` ssh-agent
   echo "Starting SSH agent"
   eval $(ssh-agent)
   ssh-add -l | grep -q '/home/vagrant/.ssh/id_rsa' || ssh-add

@@ -30,6 +30,7 @@ def get_geant_version():
     '''
         Extracting GEANT4 version from $G4LIB, e.g.
         /cvmfs/lz.opensciencegrid.org/geant4/geant4.9.5.p02/lib64/Geant4-9.5.2
+        TODO: change to use `geant4-config --version`
     '''
     # geant4.10.02
     g4lib = os.environ.get('G4LIB')
@@ -80,7 +81,7 @@ class Command(hepshell.Command):
 
     def _write_macro(self):
         macro = MACRO.format(
-            output_dir=RESULT_DIR,
+            output_dir=self.__variables['output_folder'],
             process=self.__variables['process'],
             suffix=GEANT_VERSION,
             nevents=int(self.__variables['nevents']),
@@ -93,13 +94,14 @@ class Command(hepshell.Command):
 
     def run(self, args, variables):
         self.__prepare(args, variables)
-        self.__text = "Work In Progress!\n"
-        self.__variables['input_file'] = self._write_macro()
-        self.__variables['nevents'] = int(self.__variables['nevents'])
         output_folder = os.path.join(RESULT_DIR, 'benchmark')
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
         self.__variables['output_folder'] = output_folder
+        self.__text = "Work In Progress!\n"
+        self.__variables['input_file'] = self._write_macro()
+        self.__variables['nevents'] = int(self.__variables['nevents'])
+
 
         r, b = self.work()
         if not r:
@@ -110,6 +112,8 @@ class Command(hepshell.Command):
 
         print('Ouptutfile:', self.output_file)
         benchmark_file = self.output_file.replace('.bin', '.csv')
+        if benchmark_file.endswith('.tmp'):
+            benchmark_file = benchmark_file.replace('.tmp', '')
         b.to_csv(benchmark_file)
         print('Duration: {0}, RSS: {1}'.format(b.duration, b.rss_usage))
 

@@ -5,6 +5,13 @@ LZ_ROOT_PATH=/cvmfs/lz.opensciencegrid.org/ROOT/v5.34.32/slc6_gcc44_x86_64/root;
 LZ_LUXSIM_PATH=/cvmfs/lz.opensciencegrid.org/LUXSim/release-4.4.6;export LZ_LUXSIM_PATH
 
 # setup all the projects
-source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.9.5.p02
-source ${LZ_ROOT_PATH}/bin/thisroot.sh
+DOMAIN=`dnsdomainname`
+if [ "$DOMAIN" == "nersc.gov" ]; then
+  module load Geant4/4.9.5
+  module load ROOT/5.34.20
+else
+  source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.9.5.p02
+  source ${LZ_ROOT_PATH}/bin/thisroot.sh
+fi
+
 export LD_LIBRARY_PATH=${LZ_CLHEP_PATH}/lib:${LD_LIBRARY_PATH}

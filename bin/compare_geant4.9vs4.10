@@ -1,6 +1,64 @@
 #!/bin/bash
 [ $# -eq 0 ] && { echo "Usage: $0 <number of events to produce>"; exit 1; }
 
+unload_software()
+{
+  GEANT4_VERSION=$1
+  ROOT_VERSION=$2
+  DOMAIN=`dnsdomainname`
+  if [ "$DOMAIN" == "nersc.gov" ]; then
+    if [ "$GEANT4_VERSION" == "9" ]; then
+      module unload Geant4/4.9.5
+    elif [ "$GEANT4_VERSION" == "10" ]; then
+      module unload Geant4/10.02.b01
+    fi
+    if [ "$ROOT_VERSION" == "5" ]; then
+      module unload ROOT/5.34.20
+    elif [ "$ROOT_VERSION" == "6" ]; then
+      module unload ROOT/6.08.00
+    fi
+  fi
+}
+
+load_software()
+{
+  GEANT4_VERSION=$1
+  ROOT_VERSION=$2
+  DOMAIN=`dnsdomainname`
+  if [ "$DOMAIN" == "nersc.gov" ]; then
+    if [ "$GEANT4_VERSION" == "9" ]; then
+      module load Geant4/4.9.5
+      echo "Loaded Geant4/4.9.5"
+    elif [ "$GEANT4_VERSION" == "10" ]; then
+      module load Geant4/10.02.b01
+      echo "Loaded Geant4/10.02.b01"
+    fi
+    if [ "$ROOT_VERSION" == "5" ]; then
+      module load ROOT/5.34.20
+      echo "Loaded ROOT/5.34.20"
+    elif [ "$ROOT_VERSION" == "6" ]; then
+      module load ROOT/6.08.00
+      echo "Loaded ROOT/6.08.00"
+    fi
+  else
+    if [ "$GEANT4_VERSION" == "9" ]; then
+      source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.9.5.p02
+      echo "Loaded Geant4/4.9.5"
+    elif [ "$GEANT4_VERSION" == "10" ]; then
+      source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.10.02.b01
+      echo "Loaded Geant4/4.10.02"
+    fi
+    if [ "$ROOT_VERSION" == "5" ]; then
+      source ${LZ_ROOT_PATH}/bin/thisroot.sh
+      echo "Loaded ROOT/5.34.32"
+    elif [ "$ROOT_VERSION" == "6" ]; then
+      source /cvmfs/sft.cern.ch/lcg/views/LCG_latest/x86_64-slc6-gcc62-opt/setup.sh
+      echo "Loaded ROOT/6.08.00"
+    fi
+  fi
+  source activate lz
+}
+
 # TODO: cleanup files
 # TODO: create binaries in different path?
 # TODO: add benchmark matrix
@@ -9,26 +67,34 @@
 #   - different GEANT versions
 #   - different BACCARAT versions?
 
-# fixes for PDSF
-DOMAIN=`dnsdomainname`
+# this should be safe
+unload_software "9" "5"
 
-
-source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.9.5.p02
-lz compile BACCARAT --clean
-lz benchmark BACCARAT --nevents=$1
-
-# requires Qt to be installed!
-if [ "$DOMAIN" == "nersc.gov" ]; then
-  module load Geant4/10.02.b01
-else
-  source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.10.02.b01
-fi
-lz compile BACCARAT  --clean
-lz benchmark BACCARAT --nevents=$1
-if [ "$DOMAIN" == "nersc.gov" ]; then
-  module unload Geant4/10.02.b01
-fi
-#lz merge ${PROJECT_ROOT}/workspace/results/benchmark/*.csv ${PROJECT_ROOT}/workspace/results/benchmark/summary.csv
+load_software "9" "5"
+lz compile BACCARAT --clean &>> workspace/log/benchmark_compile.log
+lz benchmark BACCARAT --nevents=1000
+lz benchmark BACCARAT --nevents=10000
+lz benchmark BACCARAT --nevents=100000
+unload_software "9" "5"
+# GEANT4 10, ROOT 5
+load_software "10" "5"
+lz compile BACCARAT  --clean &>> workspace/log/benchmark_compile.log
+lz benchmark BACCARAT --nevents=1000
+lz benchmark BACCARAT --nevents=10000
+lz benchmark BACCARAT --nevents=100000
+unload_software "10" "5"
+# GEANT4 9, ROOT 6
+# load_software "9" "6"
+# lz compile BACCARAT  --clean
+# lz benchmark BACCARAT --nevents=$1
+# unload_software "9" "6"
+# # GEANT4 10, ROOT 6
+# load_software "10" "6"
+# lz compile BACCARAT  --clean
+# lz benchmark BACCARAT --nevents=$1
+# unload_software "10" "6"
 # restore
-source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.9.5.p02
+load_software "9" "5"
+lz compile BACCARAT  --clean
 # TODO: Add summary
+#lz merge ${PROJECT_ROOT}/workspace/results/benchmark/*.csv ${PROJECT_ROOT}/workspace/results/benchmark/summary.csv
