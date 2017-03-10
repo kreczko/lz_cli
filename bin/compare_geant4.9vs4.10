@@ -72,16 +72,18 @@ unload_software "9" "5"
 
 load_software "9" "5"
 lz compile BACCARAT --clean &>> workspace/log/benchmark_compile.log
-lz benchmark BACCARAT --nevents=1000
-lz benchmark BACCARAT --nevents=10000
-lz benchmark BACCARAT --nevents=100000
+for nevents in "$@"
+do
+  lz benchmark BACCARAT --nevents=$nevents
+done
 unload_software "9" "5"
 # GEANT4 10, ROOT 5
 load_software "10" "5"
 lz compile BACCARAT  --clean &>> workspace/log/benchmark_compile.log
-lz benchmark BACCARAT --nevents=1000
-lz benchmark BACCARAT --nevents=10000
-lz benchmark BACCARAT --nevents=100000
+for nevents in "$@"
+do
+  lz benchmark BACCARAT --nevents=$nevents
+done
 unload_software "10" "5"
 # GEANT4 9, ROOT 6
 # load_software "9" "6"
@@ -97,4 +99,4 @@ unload_software "10" "5"
 load_software "9" "5"
 lz compile BACCARAT  --clean
 # TODO: Add summary
-#lz merge ${PROJECT_ROOT}/workspace/results/benchmark/*.csv ${PROJECT_ROOT}/workspace/results/benchmark/summary.csv
+lz merge ${PROJECT_ROOT}/workspace/results/benchmark/*.csv ${PROJECT_ROOT}/workspace/results/benchmark/summary.csv
