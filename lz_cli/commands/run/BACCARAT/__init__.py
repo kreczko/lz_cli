@@ -11,6 +11,7 @@
         output_folder:
             Optional output folder. Default = {RESULT_DIR}
 """
+from __future__ import print_function
 import logging
 import hepshell
 from lz_cli.setup import BACCARAT_DIR, RESULT_DIR
@@ -27,12 +28,9 @@ def parseOutputFile(stdout):
         return None
     start = stdout.find(token_start)
     substr = stdout[start:]
-    print(substr, stdout[-500:])
     end = substr.find(token_end)
     output = substr[:end + len(token_end)]
-    print(output)
     output_file = output.split()[-1]
-    print(output_file)
     if './' in output_file:
         output_file = output_file.replace('./', BACCARAT_DIR + '/')
     logger.debug('Found "{0} output file'.format(output_file))
@@ -111,6 +109,8 @@ class Command(hepshell.Command):
         BAC_EXE = './BACCARATExecutable'
 
         input_file = self.__variables['input_file']
+        # if not input_file:
+        #     input_file = self.__args[0]
         if not os.path.exists(input_file):
             self.__text += 'File {0} does not exist'.format(input_file)
             return False
@@ -118,12 +118,12 @@ class Command(hepshell.Command):
         logger.debug('using input file: %s', input_file)
 
         # code, stdout = runBACCARATwithPb(input_file)
-        code, stdout, _ = runBACCARAT(input_file)
+        code, stdout, stderr = runBACCARAT(input_file)
 
         if code != 0:
             return False
 
-        output_file = parseOutputFile(stdout)
+        output_file = parseOutputFile(stdout + '\n' + stderr)
         output_folder = self.__variables['output_folder']
         r, output_file = moveOutputfile(output_file, output_folder)
         if r:

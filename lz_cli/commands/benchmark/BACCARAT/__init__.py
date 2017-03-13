@@ -110,12 +110,11 @@ class Command(hepshell.Command):
         self.output_file = r.getOutputFile()
         self.add_meta_data(b)
 
-        print('Ouptutfile:', self.output_file)
         benchmark_file = self.output_file.replace('.bin', '.csv')
         if benchmark_file.endswith('.tmp'):
             benchmark_file = benchmark_file.replace('.tmp', '')
         b.to_csv(benchmark_file)
-        print('Duration: {0}, RSS: {1}'.format(b.duration, b.rss_usage))
+        logger.info('Duration: {0}, RSS: {1}'.format(b.duration, b.rss_usage))
 
         return True
 

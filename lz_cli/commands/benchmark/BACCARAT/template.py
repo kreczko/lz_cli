@@ -26,7 +26,7 @@ MACRO = """
 
 /Bacc/source/set LXe {process}
 
-/Bacc/io/outputName xenon_photon_{suffix}_
+/Bacc/io/outputName xenon_photon_{suffix}_{nevents}events_
 /Bacc/beamOn {nevents}
 
 

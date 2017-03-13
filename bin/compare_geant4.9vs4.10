@@ -98,5 +98,5 @@ unload_software "10" "5"
 # restore
 load_software "9" "5"
 lz compile BACCARAT  --clean
-# TODO: Add summary
+# create summary
 lz merge ${PROJECT_ROOT}/workspace/results/benchmark/*.csv ${PROJECT_ROOT}/workspace/results/benchmark/summary.csv
