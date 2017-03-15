@@ -9,6 +9,7 @@ DOMAIN=`dnsdomainname`
 if [ "$DOMAIN" == "nersc.gov" ]; then
   module load Geant4/4.9.5
   module load ROOT/5.34.20
+  module load CLHEP/2.2.0.8
 else
   source ${LZ_GEANT_PATH}/etc/geant4env.sh geant4.9.5.p02
   source ${LZ_ROOT_PATH}/bin/thisroot.sh
