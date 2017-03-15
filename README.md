@@ -41,5 +41,6 @@ DEBUG=1 lz run luxsim examples/luxsim.mac
 
 # Benchmark suite
  1. Setup lz_cli (either [Setup on Scientific Linux 6/7](#setup-on-scientific-linux-67) or [Setup on OS X/Ubuntu/Windows](#setup-on-os-xubuntuwindows))
- 2. run `make benchmark`
- 3. Get some coffee/tea/cake
+ 2. run `cd DEV/BACCARAT && git checkout ack-XenonCyl && cd -`
+ 3. run `make benchmark`
+ 4. Get some coffee/tea/cake
