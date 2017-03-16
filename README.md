@@ -1,4 +1,7 @@
-# LZ Command Line Interface
+# LZ CLI
+The LZ (`/ˈleɪzi/`) Command Line Interface is a collection of commands to
+simplify interactions with the LZ software and to execute workflows.
+
 ## Prerequisites
  1. Make sure you have access to the LZ repositories (lz-git.ua.edu)
  2. Configure SSH access for your gitlab account
