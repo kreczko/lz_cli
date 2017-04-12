@@ -16,3 +16,4 @@ else
 fi
 
 export LD_LIBRARY_PATH=${LZ_CLHEP_PATH}/lib:${LD_LIBRARY_PATH}
+export CPATH=/cvmfs/lz.opensciencegrid.org/external/gsl/1.14/include

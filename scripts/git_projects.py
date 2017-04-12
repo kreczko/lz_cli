@@ -19,6 +19,8 @@ PROJECTS = {
     'DER': GITHUB_BASE + "sim/ElectronicsSimulation.git",
     'TDRAnalysis': GITHUB_BASE + "sim/TDRAnalysis.git",
     'PhotonDetection': GITHUB_BASE + "physics/PhotonDetection.git",
+    'LZBuild': GITHUB_BASE + "lz-general/LzBuild.git",
+    'LZap': GITHUB_BASE + "lzap/LZap.git",
     #'TDRScience': GITHUB_BASE + "TDRScience.git", # this one is 700 MB large
 }
 
